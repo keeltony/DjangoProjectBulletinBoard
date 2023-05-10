@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # 'django.contrib.flatpages',
+    'django.contrib.flatpages',
     'Accounts',
+    'Board',
 
     'allauth',
     'allauth.account',
@@ -125,7 +126,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = 'media/'
+MEDIA_URL = '/media/'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -137,11 +142,11 @@ AUTHENTICATION_BACKENDS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Куда перенаправлять после входи или выхода
-LOGIN_REDIRECT_URL = '/news/'
-LOGOUT_REDIRECT_URL = '/news/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Добавляем константу для папки статик где лежит ксс у нас
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static/frontend"]
 
 # Settings allauth
 ACCOUNT_EMAIL_REQUIRED = True
@@ -153,7 +158,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
 
 ACCOUNT_FORMS = {
-    'signup': 'Accounts.forms.CastomCreateUser',
+    'signup': 'Accounts.forms.CustomCreateUser',
 }
 
 # Settings e-mail
