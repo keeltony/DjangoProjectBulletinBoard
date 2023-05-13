@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ads
+from .models import Ads, Response
 
 
 class CreateAdsForms(forms.ModelForm):
@@ -10,4 +10,12 @@ class CreateAdsForms(forms.ModelForm):
             'text',
             'category',
             'upload',
+        ]
+
+
+class ResponseButtonForms(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = [
+            'text'
         ]

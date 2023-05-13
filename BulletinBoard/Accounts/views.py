@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def UserProfile(request):
+    context = request.user
+    return render(request, 'account/UserProfile.html', {'context': context})

@@ -1,0 +1,8 @@
+{% extends 'flatpages/index.html' %}
+{% block content %}
+<h3>{{ DetailAds.title }}</h3>
+<p>{{ DetailAds.text }}</p>
+
+<img src="{{ DetailAds.upload.url }}">
+
+{% endblock content %}

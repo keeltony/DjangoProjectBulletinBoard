@@ -15,7 +15,7 @@
         <!-- Responsive navbar-->
        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-        <a class="navbar-brand" href="">Новости</a>
+        <a class="navbar-brand" href="{% url 'ListAds' %}">Лента объявлений</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false"
@@ -30,7 +30,7 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/accounts/profile/">Профиль</a>
+                    <a class="nav-link" href="{% url 'UserProfile' %}">Профиль</a>
                 </li>
                 {% endif %}
             </ul>
