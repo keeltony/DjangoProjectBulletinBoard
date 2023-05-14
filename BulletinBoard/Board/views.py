@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .models import Ads
-from .forms import CreateAdsForms
 from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+
+from .models import Ads, Response
+from .forms import CreateAdsForms, ResponseButtonForms
 
 
 class ListAds(generic.ListView):
@@ -27,7 +29,7 @@ class CreateAds(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView)
         return super().form_valid(form)
 
 
-class DetailAds(generic.DetailView):
+class DetailAds(LoginRequiredMixin, generic.DetailView):
     model = Ads
     template_name = 'board/DetailAds.html'
     context_object_name = 'DetailAds'
@@ -40,11 +42,14 @@ class EditingAds(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView
     permission_required = ('Board.add_ads', 'Board.change_ads')
 
 
-@login_required
-def response_button(request, pk):
-    user = request.user
-    ads = Ads.objects.get(pk=pk)
-    ads_user = ads.author
-    email = EmailMessage(subject=ads.title, message='message', to=ads_user.email)
-    email.send()
-    return render(request, template_name='board/ResponseButton.html')
+class ResponseButton(LoginRequiredMixin, generic.CreateView):
+    model = Response
+    form_class = ResponseButtonForms
+    template_name = 'board/ResponseButton.html'
+    context_object_name = 'ResponseButton'
+    success_url = reverse_lazy('ListAds')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.ads = Ads.objects.get(pk=self.kwargs['pk'])
+        return super().form_valid(form)
