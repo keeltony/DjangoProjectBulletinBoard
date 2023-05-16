@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('Accounts.urls')),
-    path('fpages/', include('django.contrib.flatpages.urls')),
+
     path('board/', include('Board.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

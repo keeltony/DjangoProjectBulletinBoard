@@ -1,5 +1,11 @@
 {% extends 'flatpages/index.html' %}
 
 {% block content %}
-    {{ context }}
+<div align="center">
+    {{ context.username }}
+    <hr>
+    {{ context.email }}
+    <hr>
+
+</div>
 {% endblock content %}
