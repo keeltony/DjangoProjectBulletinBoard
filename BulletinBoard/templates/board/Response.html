@@ -1,0 +1,23 @@
+{% extends 'flatpages/index.html' %}
+
+{% block content %}
+<p>Поиск</p>
+<form action="" method="get">
+   {{ filterset.form.as_p }}
+   <input type="submit" value="Найти" />
+</form>
+<hr>
+<p>Не отвеченые отклики на ваши обьявления:</p>
+<table>
+    {% for resp in response %}
+        <tr>
+            <td align="left">Дата отправки: {{ resp.date_create|date:'d M Y'}}</td>
+            <td align="center">Сообщение: {{ resp.text }}</td>
+            <td>Отправитель: {{ resp.author }}</td>
+            <td><a href="{% url 'response_success' pk=resp.pk %}">Принять</a></td>
+            <td><a href="{% url 'ResponseDelete' pk=resp.pk %}">Удалить</a></td>
+
+        </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

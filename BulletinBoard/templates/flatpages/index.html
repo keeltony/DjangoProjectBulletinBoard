@@ -31,6 +31,13 @@
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'UserProfile' %}">Профиль</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/logout/">Выйти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'response' %}">Отклики</a>
                 </li>
                 {% endif %}
             </ul>

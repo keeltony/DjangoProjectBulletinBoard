@@ -2,13 +2,19 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.http.response import HttpResponseRedirect
+from django.contrib.auth.models import User
 
 from .models import Ads, Response
 from .forms import CreateAdsForms, ResponseButtonForms
+from .filters import ResponseFilter
 
 
 class ListAds(generic.ListView):
+    """ Показ всех обьявлений пользователей """
+
     model = Ads
     template_name = 'board/ListAds.html'
     ordering = '-date_create'
@@ -16,6 +22,7 @@ class ListAds(generic.ListView):
 
 
 class CreateAds(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+    """Создание обьявления зарегистрированым пользователем пользователем"""
     model = Ads
     form_class = CreateAdsForms
     template_name = 'board/CreateAds.html'
@@ -29,12 +36,16 @@ class CreateAds(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView)
 
 
 class DetailAds(LoginRequiredMixin, generic.DetailView):
+    """Полная информация по обьявлению"""
     model = Ads
     template_name = 'board/DetailAds.html'
     context_object_name = 'DetailAds'
 
 
 class EditingAds(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
+    """"Редактирование обьявление для пользователя чье обьявлнеие
+    обьявления других пользователей не редактируются """
+
     model = Ads
     template_name = 'board/EditingAds.html'
     context_object_name = 'EditingAds'
@@ -42,6 +53,7 @@ class EditingAds(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView
 
 
 class ResponseButton(LoginRequiredMixin, generic.CreateView):
+    """ Отправка отклика на обьявление другого пользователя """
     model = Response
     form_class = ResponseButtonForms
     template_name = 'board/ResponseButton.html'
@@ -52,3 +64,54 @@ class ResponseButton(LoginRequiredMixin, generic.CreateView):
         form.instance.author = self.request.user
         form.instance.ads = Ads.objects.get(pk=self.kwargs['pk'])
         return super().form_valid(form)
+
+
+class ResponseDelete(LoginRequiredMixin, generic.DeleteView):  # FIXME
+    #  Залогиненый пользователь может урлом удалить обьяления рандомно если будет вводить их id
+    """Удаление откликов пользователей которые откликнулись на обьявлнеие
+    пользователя"""
+    model = Response
+    template_name = 'board/ResponseDelete.html'
+    context_object_name = 'ResponseDelete'
+
+    def form_valid(self, form):
+        user_obj = self.object.ads.author
+        user_del = form.instance
+        if user_obj == user_del:
+            self.object.delete()
+            return HttpResponseRedirect(reverse_lazy)
+
+
+@login_required()
+def response_success(request, pk):
+    user = request.user
+    response = Response.objects.get(pk=pk)
+    if user == response.ads.author:
+        response.status = True
+        response.save()
+        send_mail(
+            subject=f'Пользователь {user} принял ваше предложение',
+            message=f'Ваш отклик на обьявление {response.ads} было принято',
+            from_email=None,
+            recipient_list=[response.author.email]
+        )
+        return HttpResponseRedirect(reverse_lazy('UserProfile'))
+
+
+class ResponseList(generic.ListView):
+    """приватная страница с откликами на обьявления пользователя"""
+    model = Response
+    template_name = 'board/Response.html'
+    context_object_name = 'Response'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = ResponseFilter(self.request.GET, queryset=Response.objects.filter(
+            ads__author=self.request.user).order_by('-date_create'))
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        context['response'] = Response.objects.filter(ads__author=self.request.user)
+        return context

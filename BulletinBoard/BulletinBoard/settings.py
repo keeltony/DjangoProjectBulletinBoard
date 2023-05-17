@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
+    'django_filters',
 ]
 
 SITE_ID = 1
@@ -152,7 +153,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # mandatory
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
 
@@ -172,7 +173,6 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 SERVER_EMAIL = os.getenv('SERVER_EMAIL')
-
 
 # Settings celery
 CELERY_BROKER_URL = 'redis://localhost:6379'
