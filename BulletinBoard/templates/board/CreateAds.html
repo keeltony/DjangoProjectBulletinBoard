@@ -1,8 +1,8 @@
 {% extends 'flatpages/index.html' %}
 {% block content %}
-<h1>Редактирование обьявления</h1>
+<h1>Создание обьявления</h1>
 <hr>
-<form action="" method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save"/>
