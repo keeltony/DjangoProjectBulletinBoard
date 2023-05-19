@@ -158,7 +158,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
 
 ACCOUNT_FORMS = {
-    'signup': 'Accounts.forms.CustomCreateUser',
+    'signup': 'Accounts.forms.SignUpForm',
 }
 
 # Settings e-mail
