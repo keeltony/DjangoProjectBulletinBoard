@@ -85,13 +85,9 @@ class ResponseDelete(LoginRequiredMixin, generic.DeleteView):
     model = Response
     template_name = 'board/ResponseDelete.html'
     context_object_name = 'ResponseDelete'
+    success_url = '/board/response/'
 
-    def form_valid(self, form):
-        user_obj = self.object.ads.author
-        user_del = form.instance
-        if user_obj == user_del:
-            self.object.delete()
-            return HttpResponseRedirect(reverse_lazy)
+
 
 
 @login_required()
