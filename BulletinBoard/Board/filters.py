@@ -1,22 +1,23 @@
-import requests
 from django.forms import DateTimeInput
-from django_filters import FilterSet, ModelMultipleChoiceFilter, DateTimeFilter
+from django import forms
 
-from .models import Response, Ads
-from django_filters import CharFilter
+from django_filters import FilterSet, DateTimeFilter, BooleanFilter, ModelMultipleChoiceFilter, CharFilter
+from .models import Ads
 
 
 class ResponseFilter(FilterSet):
     text = CharFilter(lookup_expr='icontains', label='Поиск по сообщению')
 
-    # ads = ModelMultipleChoiceFilter(field_name='ads',
-    #                                 queryset=,
-    #                                 label='По обьявлению', conjoined=False
-    #                                 )
-
     date_create = DateTimeFilter(field_name='date', lookup_expr='gt',
                                  label='По дате:',
                                  widget=DateTimeInput(
                                      format='%Y:%m:%d',
-                                     attrs={'type': 'date'},)
+                                     attrs={'type': 'date'}, )
                                  )
+
+    ads = ModelMultipleChoiceFilter(field_name='ads',
+                                    queryset=Ads.objects.all(),
+                                    label='По обьявлению', conjoined=False
+                                    )
+
+    status = BooleanFilter(field_name='status', label='Принятые', widget=forms.CheckboxInput)

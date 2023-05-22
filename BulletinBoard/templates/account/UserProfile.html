@@ -8,4 +8,10 @@
     Email: {{ user.email }}
     <hr>
 </div>
+{% if not activate %}
+    <a href="{% url 'UserActivation' %}">Активировать пользователя</a>
+{% else %}
+    <p>Профиль активирован</p>
+{% endif %}
+
 {% endblock content %}

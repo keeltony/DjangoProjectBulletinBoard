@@ -19,7 +19,7 @@ class ListAds(generic.ListView):
     template_name = 'board/ListAds.html'
     ordering = '-date_create'
     context_object_name = 'ListAds'
-    paginate_by = 2
+    paginate_by = 5
 
 
 class CreateAds(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
@@ -61,7 +61,8 @@ class EditingAds(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView
         else:
             return super().form_valid(form)
 
-class ResponseButton(LoginRequiredMixin, generic.CreateView):
+
+class ResponseButton(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     """ Отправка отклика на обьявление другого пользователя """
 
     model = Response
@@ -69,6 +70,7 @@ class ResponseButton(LoginRequiredMixin, generic.CreateView):
     template_name = 'board/ResponseButton.html'
     context_object_name = 'ResponseButton'
     success_url = reverse_lazy('ListAds')
+    permission_required = ('Board.add_ads', 'Board.change_ads')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -76,8 +78,7 @@ class ResponseButton(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
-class ResponseDelete(LoginRequiredMixin, generic.DeleteView):  # FIXME
-    #  Залогиненый пользователь может урлом удалить обьяления рандомно если будет вводить их id
+class ResponseDelete(LoginRequiredMixin, generic.DeleteView):
     """Удаление откликов пользователей которые откликнулись на обьявлнеие
     пользователя"""
 
@@ -118,6 +119,7 @@ class ResponseList(generic.ListView):
     model = Response
     template_name = 'board/Response.html'
     context_object_name = 'Response'
+    paginate_by = 3
 
     def get_queryset(self):
         queryset = super().get_queryset()

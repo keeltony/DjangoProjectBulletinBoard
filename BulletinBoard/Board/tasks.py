@@ -1,8 +1,10 @@
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 
 from celery import shared_task
-
+import datetime
+from .models import Ads
 
 @shared_task
 def response_button_send_mail(title, text, ads_user, ads_email,
@@ -27,3 +29,10 @@ def response_button_send_mail(title, text, ads_user, ads_email,
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
+@shared_task()
+def mailing_list():
+    email_all = User.objects.all().values_list('email')
+    bulletin = Ads.objects.filter(date_create__gte=datetime.datetime.today() - datetime.timedelta(days=1))
+    return print(12312)

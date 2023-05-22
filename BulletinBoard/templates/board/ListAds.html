@@ -8,11 +8,14 @@
 
     <h3 class="article__title" align="left">
         <a href="{% url 'DetailAds' pk=list.pk %}">{{ list.title }}</a>
-        <a href="{% url 'ResponseButton' pk=list.pk %}">Откликнуться</a>
+
     </h3>
     <div align="left" class="category_post_list">
         <p align="left">категории: {{ list.category }}</p>
     </div>
+    {% if not user == list.author %}
+    <p><a href="{% url 'ResponseButton' pk=list.pk %}">Откликнуться</a></p>
+    {% endif %}
     <div class="article__content" align="left">
         {{ list.text|truncatechars:40 }}
     </div>

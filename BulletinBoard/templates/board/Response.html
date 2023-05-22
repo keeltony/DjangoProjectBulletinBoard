@@ -12,6 +12,7 @@
     {% for resp in response %}
         <tr>
             <td align="left">Дата отправки: {{ resp.date_create|date:'d M Y'}}</td>
+            <td>Обьявление:{{ resp.ads.title }}</td>
             <td align="center">Сообщение: {{ resp.text }}</td>
             <td>Отправитель: {{ resp.author }}</td>
             <td><a href="{% url 'response_success' pk=resp.pk %}">Принять</a></td>
@@ -19,5 +20,22 @@
 
         </tr>
     {% endfor %}
+</table>
+<hr>
+<h3>Информация по поиску</h3>
+<table>
+{% for filter in Response %}
+     <tr>
+         <td align="left">Дата отправки: {{ filter.date_create|date:'d M Y'}}</td>
+         <td>Обьявление:{{ filter.ads.title }}</td>
+         <td align="center">Сообщение: {{ filter.text }}</td>
+         <td>Отправитель: {{ filter.author }}</td>
+        {% if filter.status == False %}
+            <td><a href="{% url 'response_success' pk=filter.pk %}">Принять</a></td>
+        {% endif %}
+         <td><a href="{% url 'ResponseDelete' pk=filter.pk %}">Удалить</a></td>
+
+     </tr>
+{% endfor%}
 </table>
 {% endblock content %}

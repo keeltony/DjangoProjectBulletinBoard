@@ -44,10 +44,6 @@ INSTALLED_APPS = [
     'Accounts',
     'Board',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.yandex',
     'django_filters',
 ]
 

@@ -2,13 +2,14 @@
 {% block content %}
 <h3>{{ DetailAds.title }}</h3>
 <p>{{ DetailAds.text }}</p>
+{% if DetailAds.photo %}
+<img src="{{ DetailAds.photo.url }}" width="650" height="500">
+{% endif %}
 {% if DetailAds.upload %}
     <video width="400" controls>
       <source src="{{DetailAds.upload.url }}" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
-
-    <img src="{{ DetailAds.upload.url }}" width="650" height="500">
 {% endif%}
 <hr>
 {% if DetailAds.author == request.user %}

@@ -9,6 +9,7 @@ class CreateAdsForms(forms.ModelForm):
             'title',
             'text',
             'category',
+            'photo',
             'upload',
         ]
 

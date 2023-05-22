@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
-
 class Ads(models.Model):
     TYPE = [
         ('TN', 'Танк'),
@@ -22,6 +21,7 @@ class Ads(models.Model):
     title = models.CharField(max_length=128)
     text = models.TextField()
     category = models.CharField(max_length=2, choices=TYPE, default='TN')
+    photo = models.ImageField(upload_to='photo/', blank=True, null=True)
     upload = models.FileField(upload_to='uploads/', blank=True, null=True)
 
     def __str__(self):
@@ -40,7 +40,3 @@ class Response(models.Model):
 
     def __str__(self):
         return f'{self.text}'
-
-
-
-
