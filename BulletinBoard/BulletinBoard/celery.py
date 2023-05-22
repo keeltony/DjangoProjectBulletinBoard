@@ -11,7 +11,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'mailing_list_Daily_midnight': {
-        'task': 'board.tasks.mailing_list',
-        'schedule': 15,
+        'task': 'Board.tasks.mailing_list',
+        'schedule': crontab(minute=0, hour=13),
     },
 }

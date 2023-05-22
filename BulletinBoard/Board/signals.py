@@ -34,5 +34,3 @@ def response_delete(instance, **kwargs):
         from_email=None,
         recipient_list=[res_email]
     )
-
-

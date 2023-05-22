@@ -1,10 +1,13 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from celery import shared_task
 import datetime
+
 from .models import Ads
+
 
 @shared_task
 def response_button_send_mail(title, text, ads_user, ads_email,
@@ -33,6 +36,20 @@ def response_button_send_mail(title, text, ads_user, ads_email,
 
 @shared_task()
 def mailing_list():
+    """Ежедневная рассылка в обьявлений в 13:00"""
+    today = datetime.datetime.now()
+    yesterday = today - datetime.timedelta(days=1)
+    bulletins = Ads.objects.filter(date_create__gte=yesterday)
     email_all = User.objects.all().values_list('email')
-    bulletin = Ads.objects.filter(date_create__gte=datetime.datetime.today() - datetime.timedelta(days=1))
-    return print(12312)
+
+    html_content = render_to_string(
+        'board/email/mailing_list.html', {
+            'bulletins': bulletins
+        })
+    msg = EmailMultiAlternatives(
+        subject='Привет все новости за сутки',
+        from_email=None,
+        to=email_all
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()

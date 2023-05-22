@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Board',
 
     'django_filters',
+    # 'django_apscheduler',
 ]
 
 SITE_ID = 1
